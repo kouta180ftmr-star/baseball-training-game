@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>高校野球 選手育成ゲーム</title>
+<style>
+    body {
+        font-family: sans-serif;
+        padding: 20px;
+        background: #f3f8ff;
+    }
+    h1 { text-align: center; }
+    button {
+        padding: 15px;
+        font-size: 18px;
+        width: 100%;
+        margin: 10px 0;
+        border-radius: 10px;
+    }
+    #status, #jobSelectArea {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-size: 18px;
+    }
+</style>
+</head>
+<body>
+
+<h1>高校野球 選手育成</h1>
+
+<!-- 初期設定：ポジション選択 -->
+<div id="jobSelectArea">
+    <p>選手のタイプを選んでください：</p>
+    <button onclick="selectJob('pitcher')">投手（ピッチャー）</button>
+    <button onclick="selectJob('fielder')">野手</button>
+</div>
+
+<div id="status" style="display:none;"></div>
+
+<!-- コマンド -->
+<div id="commandArea" style="display:none;">
+    <button onclick="train('batting')">バッティング練習</button>
+    <button onclick="train('pitching')">ピッチング練習</button>
+    <button onclick="train('running')">走り込み</button>
+    <button onclick="rest()">休養</button>
+    <button onclick="match()">練習試合</button>
+</div>
+
+<script>
+let player = {
+    name: "",
+    position: "",
+    batting: 0,
+    pitching: 0,
+    speed: 0,
+    stamina: 100,
+    day: 1
+};
+
+// 初期ポジション選択
+function selectJob(job) {
+    if (job === "pitcher") {
+        player.position = "投手";
+        player.name = "ゆうと";  // ← 投手なら“ゆうと”
+        player.batting = 40;
+        player.pitching = 60;
+        player.speed = 45;
+        alert("ゆうとは『投手』を選択した！");
+    } e
