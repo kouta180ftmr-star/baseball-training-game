@@ -143,6 +143,17 @@ function match() {
     player.day++;
     showStatus();
 }
+    window.addEventListener("keydown", function(e) {
+    if (document.getElementById("commandArea").style.display === "none") return;
+
+    let key = e.key.toLowerCase();
+
+    if (key === "b") train("batting");
+    if (key === "p") train("pitching");
+    if (key === "r") train("running");
+    if (key === "h") rest();
+    if (key === "m") match();
+});
 </script>
 
 </body>
