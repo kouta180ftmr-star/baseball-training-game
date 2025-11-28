@@ -15,19 +15,19 @@ button { padding: 15px; font-size: 18px; width: 100%; margin: 10px 0; border-rad
 <h1>高校野球 選手育成</h1>
 
 <div id="jobSelectArea">
-<p>選手のタイプを選んでください：</p>
-<button onclick="selectJob('pitcher')">投手（ピッチャー）</button>
-<button onclick="selectJob('fielder')">野手</button>
+    <p>選手のタイプを選んでください：</p>
+    <button onclick="selectJob('pitcher')">投手（ピッチャー）</button>
+    <button onclick="selectJob('fielder')">野手</button>
 </div>
 
 <div id="status" style="display:none;"></div>
 
 <div id="commandArea" style="display:none;">
-<button onclick="train('batting')">バッティング練習（Bキー）</button>
-<button onclick="train('pitching')">ピッチング練習（Pキー）</button>
-<button onclick="train('running')">走り込み（Rキー）</button>
-<button onclick="rest()">休養（Hキー）</button>
-<button onclick="match()">練習試合（Mキー）</button>
+    <button onclick="train('batting')">バッティング練習</button>
+    <button onclick="train('pitching')">ピッチング練習</button>
+    <button onclick="train('running')">走り込み</button>
+    <button onclick="rest()">休養</button>
+    <button onclick="match()">練習試合</button>
 </div>
 
 <script>
@@ -45,7 +45,9 @@ let turnCount = 0;
 let summerTournament = false;
 let tournamentWins = 0;
 
-// 初期ポジション選択
+/*--------------------------------
+   初期ポジション選択
+--------------------------------*/
 function selectJob(job) {
     if (job === "pitcher") {
         player.position = "投手";
@@ -69,7 +71,9 @@ function selectJob(job) {
     showStatus();
 }
 
-// ステータス表示
+/*--------------------------------
+   ステータス表示
+--------------------------------*/
 function showStatus(){
     document.getElementById("status").innerHTML = `
         <b>【${player.day}日目】</b><br>
@@ -82,33 +86,62 @@ function showStatus(){
     `;
 }
 
-// 次ターン処理
+/*--------------------------------
+   ターン処理
+--------------------------------*/
 function nextTurn(){
     turnCount++;
-    if(turnCount>=50 && !summerTournament){
-        summerTournament=true;
+    if(turnCount >= 50 && !summerTournament){
+        summerTournament = true;
         alert("夏の甲子園イベントが始まった！");
         startTournament();
     }
 }
 
-// 練習
+/*--------------------------------
+   練習
+--------------------------------*/
 function train(type){
-    if(player.stamina<=10){ alert("体力がない…休もう！"); return; }
-    if(type==="batting"){ player.batting+=5; alert("バッティング練習！"); }
-    else if(type==="pitching"){ player.pitching+=5; alert("ピッチング練習！"); }
-    else if(type==="running"){ player.speed+=4; alert("走り込み！"); }
-    player.stamina-=15; player.day++; nextTurn(); showStatus(); checkEvent();
+    if(player.stamina <= 10){
+        alert("体力がない…休もう！");
+        return;
+    }
+
+    if(type === "batting"){
+        player.batting += 5;
+        alert("バッティング練習！");
+    }
+    else if(type === "pitching"){
+        player.pitching += 5;
+        alert("ピッチング練習！");
+    }
+    else if(type === "running"){
+        player.speed += 4;
+        alert("走り込み！");
+    }
+
+    player.stamina -= 15;
+    player.day++;
+    nextTurn();
+    showStatus();
+    checkEvent();
 }
 
-// 休養
+/*--------------------------------
+   休養
+--------------------------------*/
 function rest(){
-    player.stamina=100; alert("体力が全回復！");
-    player.day++; nextTurn(); showStatus(); checkEvent();
+    player.stamina = 100;
+    alert("体力が全回復！");
+    player.day++;
+    nextTurn();
+    showStatus();
+    checkEvent();
 }
 
-// 練習試合
-// 練習試合
+/*--------------------------------
+   練習試合
+--------------------------------*/
 function match(){
     let total = player.batting + player.pitching + player.speed + Math.floor(Math.random()*50);
 
@@ -122,80 +155,111 @@ function match(){
         player.batting = Math.max(player.batting - 20, 0);
         player.pitching = Math.max(player.pitching - 20, 0);
         player.speed = Math.max(player.speed - 20, 0);
-        // ゲームは続行
     }
 
     player.stamina -= 20;
     if(player.stamina < 0) player.stamina = 0;
+
     player.day++;
     nextTurn();
     showStatus();
     checkEvent();
 }
 
-
-// ランダムイベント
+/*--------------------------------
+   ランダムイベント
+--------------------------------*/
 function checkEvent(){
-    if(Math.random()<0.1){ randomEvent(); }
+    if(Math.random() < 0.1){
+        randomEvent();
+    }
 }
 
 function randomEvent(){
-    const events=["injury","super","praise","girl"];
-    let e=events[Math.floor(Math.random()*events.length)];
-    if(e==="injury"){ alert("練習中に軽いケガ…体力が20減少！"); player.stamina-=20; }
-    if(e==="super"){ alert("今日は絶好調！すべての能力が上昇！"); player.batting+=2; player.pitching+=2; player.speed+=2; }
-    if(e==="praise"){ alert("監督に褒められた！体力が20回復！"); player.stamina+=20; }
-    if(e==="girl"){
-        if(Math.random()<0.01){
-            if(Math.random()<0.5){ alert("彼女ができた！全能力値 +50"); player.batting+=50; player.pitching+=50; player.speed+=50; }
-            else{ alert("彼女はできなかった…全能力値 -50"); player.batting=Math.max(player.batting-50,0); player.pitching=Math.max(player.pitching-50,0); player.speed=Math.max(player.speed-50,0); }
+    const events = ["injury", "super", "praise", "girl"];
+    let e = events[Math.floor(Math.random()*events.length)];
+
+    if(e==="injury"){
+        alert("練習中に軽いケガ…体力が20減少！");
+        player.stamina -= 20;
+    }
+    if(e==="super"){
+        alert("今日は絶好調！すべての能力が上昇！");
+        player.batting += 2;
+        player.pitching += 2;
+        player.speed += 2;
+    }
+    if(e==="praise"){
+        alert("監督に褒められた！体力が20回復！");
+        player.stamina += 20;
+    }
+    if(e==="girl"){  
+        if(Math.random() < 0.01){  
+            if(Math.random() < 0.5){
+                alert("彼女ができた！全能力値 +50");
+                player.batting += 50;
+                player.pitching += 50;
+                player.speed += 50;
+            } else {
+                alert("彼女はできなかった…全能力値 -50");
+                player.batting = Math.max(player.batting - 50, 0);
+                player.pitching = Math.max(player.pitching - 50, 0);
+                player.speed = Math.max(player.speed - 50, 0);
+            }
         }
     }
-    if(player.stamina>100) player.stamina=100;
-    if(player.stamina<0) player.stamina=0;
+
+    if(player.stamina > 100) player.stamina = 100;
+    if(player.stamina < 0) player.stamina = 0;
+
     showStatus();
 }
 
-// 甲子園開始
-function startTournament(){ tournamentWins=0; playTournamentMatch(); }
-
-// 甲子園1試合
-function playTournamentMatch(){
-    const requiredPoints=100+tournamentWins*20;
-    let total=player.batting*0.4+player.pitching*0.4+player.speed*0.2;
-    let winRate=(total>=requiredPoints)?0.9:0.1;
-    if(Math.random()<winRate){
-        tournamentWins++;
-        alert(`試合に勝利！能力値 +20 現在${tournamentWins}勝`);
-        player.batting+=20; player.pitching+=20; player.speed+=20;
-        if(tournamentWins===3) alert("地区大会突破！");
-        if(tournamentWins===4){ alert("甲子園優勝！おめでとう！"); return; }
-    } 
-    else {
-    alert("試合に負けてしまった…ゲームオーバー！また来年がんばろう！");
-    player.batting = 0;
-    player.pitching = 0;
-    player.speed = 0;
-    player.stamina = 100;
-    player.day = 1;
-    turnCount = 0;
-    summerTournament = false;
+/*--------------------------------
+   夏の大会開始
+--------------------------------*/
+function startTournament(){
     tournamentWins = 0;
-    return;
+    playTournamentMatch();
 }
 
-// キーボード操作
-window.addEventListener("keydown",function(e){
-    if(document.getElementById("commandArea").style.display==="none") return;
-    let key=e.key.toLowerCase();
-    if(key==="b") train("batting");
-    if(key==="p") train("pitching");
-    if(key==="r") train("running");
-    if(key==="h") rest();
-    if(key==="m") match();
-});
+/*--------------------------------
+   夏の大会 1試合
+--------------------------------*/
+function playTournamentMatch(){
+    const requiredPoints = 100 + tournamentWins * 20;
+    let total = player.batting * 0.4 + player.pitching * 0.4 + player.speed * 0.2;
+
+    let winRate = (total >= requiredPoints) ? 0.9 : 0.1;
+
+    if(Math.random() < winRate){
+        tournamentWins++;
+        alert(`試合に勝利！能力値 +20 現在${tournamentWins}勝`);
+        player.batting += 20;
+        player.pitching += 20;
+        player.speed += 20;
+
+        if(tournamentWins === 3) alert("地区大会突破！");
+        if(tournamentWins === 4){
+            alert("甲子園優勝！おめでとう！");
+            return;
+        }
+    } else {
+        alert("試合に負けてしまった…ゲームオーバー！また来年がんばろう！");
+        player.batting = 0;
+        player.pitching = 0;
+        player.speed = 0;
+        player.stamina = 100;
+        player.day = 1;
+        turnCount = 0;
+        summerTournament = false;
+        tournamentWins = 0;
+        return;
+    }
+
+    playTournamentMatch();
+}
 </script>
 
 </body>
 </html>
-
