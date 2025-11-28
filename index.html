@@ -108,19 +108,31 @@ function rest(){
 }
 
 // 練習試合
+// 練習試合
 function match(){
     let total = player.batting + player.pitching + player.speed + Math.floor(Math.random()*50);
-    if(total>180){
+
+    if(total > 180){
         alert("練習試合に勝利！能力値 +30");
-        player.batting+=30; player.pitching+=30; player.speed+=30;
+        player.batting += 30;
+        player.pitching += 30;
+        player.speed += 30;
     } else {
-        alert("練習試合に負けてしまった…ゲームオーバー！1日目に戻ります");
-        player.batting=0; player.pitching=0; player.speed=0; player.stamina=100; player.day=1;
-        turnCount=0; summerTournament=false; tournamentWins=0;
+        alert("練習試合に負けてしまった…能力値 -20");
+        player.batting = Math.max(player.batting - 20, 0);
+        player.pitching = Math.max(player.pitching - 20, 0);
+        player.speed = Math.max(player.speed - 20, 0);
+        // ゲームは続行
     }
-    player.stamina-=20; if(player.stamina<0) player.stamina=0;
-    player.day++; nextTurn(); showStatus(); checkEvent();
+
+    player.stamina -= 20;
+    if(player.stamina < 0) player.stamina = 0;
+    player.day++;
+    nextTurn();
+    showStatus();
+    checkEvent();
 }
+
 
 // ランダムイベント
 function checkEvent(){
@@ -158,8 +170,18 @@ function playTournamentMatch(){
         player.batting+=20; player.pitching+=20; player.speed+=20;
         if(tournamentWins===3) alert("地区大会突破！");
         if(tournamentWins===4){ alert("甲子園優勝！おめでとう！"); return; }
-    } else { alert("試合に負けてしまった…ゲームオーバー！"); summerTournament=false; return; }
-    playTournamentMatch();
+    } 
+    else {
+    alert("試合に負けてしまった…ゲームオーバー！また来年がんばろう！");
+    player.batting = 0;
+    player.pitching = 0;
+    player.speed = 0;
+    player.stamina = 100;
+    player.day = 1;
+    turnCount = 0;
+    summerTournament = false;
+    tournamentWins = 0;
+    return;
 }
 
 // キーボード操作
