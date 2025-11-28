@@ -63,9 +63,87 @@ let player = {
 function selectJob(job) {
     if (job === "pitcher") {
         player.position = "投手";
-        player.name = "ゆうと";  // ← 投手なら“ゆうと”
+        player.name = "ゆうと";  // 投手 → ゆうと
         player.batting = 40;
         player.pitching = 60;
         player.speed = 45;
         alert("ゆうとは『投手』を選択した！");
-    } e
+    } else {
+        player.position = "野手";
+        player.name = "たいき";  // 野手 → たいき
+        player.batting = 60;
+        player.pitching = 30;
+        player.speed = 55;
+        alert("たいきは『野手』を選択した！");
+    }
+
+    document.getElementById("jobSelectArea").style.display = "none";
+    document.getElementById("status").style.display = "block";
+    document.getElementById("commandArea").style.display = "block";
+
+    showStatus();
+}
+
+function showStatus() {
+    document.getElementById("status").innerHTML = `
+        <b>【${player.day}日目】</b><br>
+        名前：${player.name}<br>
+        ポジション：${player.position}<br>
+        バッティング：${player.batting}<br>
+        ピッチング：${player.pitching}<br>
+        足の速さ：${player.speed}<br>
+        体力：${player.stamina}
+    `;
+}
+
+// 練習処理
+function train(type) {
+    if (player.stamina <= 10) {
+        alert("体力がない…休養しよう！");
+        return;
+    }
+
+    if (type === "batting") {
+        player.batting += 5;
+        alert("バッティング練習！ミート力が上がった！");
+    } 
+    else if (type === "pitching") {
+        player.pitching += 5;
+        alert("ピッチング練習！球速が上がった！");
+    }
+    else if (type === "running") {
+        player.speed += 4;
+        alert("走り込み！走力が上がった！");
+    }
+
+    player.stamina -= 15;
+    player.day++;
+    showStatus();
+}
+
+// 休養
+function rest() {
+    player.stamina = 100;
+    alert("体力が回復した！");
+    player.day++;
+    showStatus();
+}
+
+// 練習試合
+function match() {
+    let score = player.batting + player.pitching + player.speed + Math.floor(Math.random() * 50);
+
+    if (score > 180) {
+        alert("練習試合に勝利！活躍した！");
+    } else {
+        alert("惜しくも負けてしまった…");
+    }
+
+    player.stamina -= 20;
+    player.day++;
+    showStatus();
+}
+</script>
+
+</body>
+</html>
