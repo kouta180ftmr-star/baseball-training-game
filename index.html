@@ -96,12 +96,15 @@ function showStatus(){
 --------------------------------*/
 function nextTurn(){
     turnCount++;
-    if(turnCount >= 50 && !summerTournament){
+
+    if(player.day >= 50 && !summerTournament){
         summerTournament = true;
         alert("夏の甲子園イベントが始まった！");
         startTournament();
+        return;  // 夏イベント即開始
     }
 }
+
 
 /*--------------------------------
    練習
