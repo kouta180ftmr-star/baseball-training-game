@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>高校野球 選手育成ゲーム</title>
+<style>
+    body {
+        font-family: sans-serif;
+        padding: 20px;
+        background: #f3f8ff;
+    }
+    h1 { text-align: center; }
+    button {
+        padding: 15px;
+        font-size: 18px;
+        width: 100%;
+        margin: 10px 0;
+        border-radius: 10px;
+    }
+    #status, #jobSelectArea {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-size: 18px;
+    }
+</style>
+</head>
+<body>
+
+<h1>高校野球 選手育成</h1>
+
+<!-- 初期設定：ポジション選択 -->
+<div id="jobSelectArea">
+    <p>選手のタイプを選んでください：</p>
+    <button onclick="selectJob('pitcher')">投手（ピッチャー）</button>
+    <button onclick="selectJob('fielder')">野手</button>
+</div>
+
+<div id="status" style="display:none;"></div>
+
+<!-- コマンド -->
+<div id="commandArea" style="display:none;">
+    <button onclick="train('batting')">バッティング練習</button>
+    <button onclick="train('pitching')">ピッチング練習</button>
+    <button onclick="train('running')">走り込み</button>
+    <button onclick="rest()">休養</button>
+    <button onclick="match()">練習試合</button>
+</div>
+
+<script>
+let player = {
+    name: "",
+    position: "",
+    batting: 0,
+    pitching: 0,
+    speed: 0,
+    stamina: 100,
+    day: 1
+};
+
+// 初期ポジション選択
+function selectJob(job) {
+    if (job === "pitcher") {
+        player.position = "投手";
+        player.name = "ゆうと";  // ← 投手なら“ゆうと”
+        player.batting = 40;
+        player.pitching = 60;
+        player.speed = 45;
+        alert("ゆうとは『投手』を選択した！");
+    } else {
+        player.position = "野手";
+        player.name = "たいき";  // ← 野手なら“たいき”
+        player.batting = 60;
+        player.pitching = 30;
+        player.speed = 55;
+        alert("たいきは『野手』を選択した！");
+    }
+
+    document.getElementById("jobSelectArea").style.display = "none";
+    document.getElementById("status").style.display = "block";
+    document.getElementById("commandArea").style.display = "block";
+    updateStatus();
+}
+
+// ステータス更新
+function updateStatus() {
+    document.getElementById("status").innerHTML =
+        `【${player.name}（${player.position}） のステータス】<br>
+        日数: ${player.day}<br>
+        打撃力: ${player.batting}<br>
+        投球力: ${player.pitching}<br>
+        走力: ${player.speed}<br>
+        体力: ${player.stamina}/100`;
+}
+
+// 練習処理
+function train(type) {
+    if (player.stamina <= 10) {
+        alert("体力が足りない！休養が必要です。");
+        return;
+    }
+
+    let growth = Math.floor(Math.random() * 5) + 3;
+    let cost = 15;
+
+    if (type === "batting") {
+        player.batting += growth;
+        alert(`バッティング練習！ 打撃力 +${growth}`);
+    } else if (type === "pitching") {
+        player.pitching += growth;
+        alert(`ピッチング練習！ 投球力 +${growth}`);
+    } else if (type === "running") {
+        player.speed += growth;
+        alert(`走り込み！ 走力 +${growth}`);
+    }
+
+    player.stamina -= cost;
+    player.day++;
+    updateStatus();
+}
+
+// 休養
+function rest() {
+    let recover = Math.floor(Math.random() * 20) + 20;
+    player.stamina = Math.min(100, player.stamina + recover);
+    alert(`休養して体力が ${recover} 回復した！`);
+    player.day++;
+    updateStatus();
+}
+
+// 試合
+function match() {
+    let power = player.batting + player.pitching + player.speed;
+    let enemy = 120 + Math.floor(Math.random() * 100);
+
+    let result = (power > enemy)
+        ? "勝利！良い成長だ！"
+        : "敗北…もっと練習が必要だ。";
+
+    alert(`【練習試合】\nあなた:${power} vs 相手:${enemy}\n→ ${result}`);
+
+    player.day++;
+    updateStatus();
+}
+</script>
+
+</body>
+</html>
